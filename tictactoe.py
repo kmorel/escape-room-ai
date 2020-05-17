@@ -1,4 +1,5 @@
 import teletype
+import time
 
 class GameStatus:
   in_progress = 0
@@ -57,8 +58,10 @@ class Game:
 
   _empty_squares = [ 1, 2, 3, 4, 5, 6, 7, 8, 9 ]
 
-  def __init__(self):
-    pass
+  _terminal = None
+
+  def __init__(self, terminal):
+    self._terminal = terminal
 
   def _get_image(self, square):
     if square in self._x_squares:
@@ -99,24 +102,16 @@ class Game:
     s = s + self._get_row_print(self._board_numbers[1])
     s = s + '-------+-------+-------     Board key:\n'
     s = s + self._get_row_print(self._board_numbers[2], True)
-    teletype.typeout(s)
+    self._terminal.typeout(s)
 
   def x_turn(self):
-    space = None
-    while True:
-      teletype.typeout('Pick a space (1-9): ')
-      try:
-        space = int(input())
-        if (space >=1) and (space <= 9):
-          break
-        teletype.typeout('Invalid space. ')
-      except:
-        teletype.typeout('Invalid space. ')
+    space = int(self._terminal.get_char(valid=r'[1-9]',
+                                        prompt='Pick a space (1-9): '))
     self._x_squares.append(space)
     # Intentional bug: player can pick space already picked
     if space in self._empty_squares:
       self._empty_squares.remove(space)
-    teletype.typeout('\nYour move:\n')
+    self._terminal.typeout('\nYour move:\n')
     self.print_board()
 
   def _decide_o_space(self):
@@ -158,10 +153,12 @@ class Game:
     return 5
 
   def o_turn(self):
+    self._terminal.typeout('\nThinking...')
+    time.sleep(2)
     space = self._decide_o_space()
     self._o_squares.append(space)
     self._empty_squares.remove(space)
-    teletype.typeout('\nOpponent\'s move:\n')
+    self._terminal.typeout('\nOpponent\'s move:\n')
     self.print_board()
 
   def get_status(self):
@@ -202,16 +199,19 @@ class Game:
 
     status = self.get_status()
     if status == GameStatus.cat:
-      teletype.typeout('Cat game\n')
+      self._terminal.typeout('Cat game\n')
     elif status == GameStatus.x_win:
-      teletype.typeout('You won?!?!?!\n')
+      self._terminal.typeout('You won?!?!?!\n')
     elif status == GameStatus.o_win:
-      teletype.typeout('I win\n')
+      self._terminal.typeout('I win\n')
     else:
-      teletype.typeout('Internal error\n')
+      self._terminal.typeout('Internal error\n')
 
     return status
 
-if __name__ == '__main__':
-  game = Game()
+def _test(term):
+  game = Game(term)
   game.play_game()
+
+if __name__ == '__main__':
+  teletype.wrapper(_test)
