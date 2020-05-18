@@ -39,8 +39,9 @@ class terminal:
         ch = chr(ch)
         self._screen.addstr('{}\n'.format(ch))
         self._screen.refresh()
+        simpleaudio.WaveObject.from_wave_file('audio/click.wav').play()
         return ch
-      curses.beep()
+      simpleaudio.WaveObject.from_wave_file('audio/error.wav').play()
 
   def get_command(self, prompt='COMMAND: '):
     if prompt:
@@ -56,13 +57,15 @@ class terminal:
         command = command[0:-1]
         y, x = self._screen.getyx()
         self._screen.delch(y, x-1)
+        simpleaudio.WaveObject.from_wave_file('audio/click.wav').play()
         continue
       if re.fullmatch('[a-zA-Z ]', chr(ch)):
         char = str(chr(ch)).upper()
         command = command + char
         self._screen.echochar(char)
+        simpleaudio.WaveObject.from_wave_file('audio/click.wav').play()
         continue
-      curses.beep()
+      simpleaudio.WaveObject.from_wave_file('audio/error.wav').play()
 
 def _curses_init(curses_screen, user_function):
   user_function(terminal(curses_screen))
