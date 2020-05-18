@@ -26,8 +26,7 @@ class terminal:
       simpleaudio.WaveObject.from_wave_file('audio/floppy-write.wav').play()
     for ch in output:
       #print(ch, end='', flush=True)
-      self._screen.addstr(ch)
-      self._screen.refresh()
+      self._screen.echochar(ch)
       time.sleep(0.025)
     sound.stop()
 
@@ -43,6 +42,28 @@ class terminal:
         return ch
       curses.beep()
 
+  def get_command(self, prompt='COMMAND: '):
+    if prompt:
+      self.typeout(prompt)
+    command = ''
+    while True:
+      ch = self._screen.getch()
+      if (chr(ch) == '\n') and (len(command) > 0):
+        self._screen.echochar('\n')
+        return command
+      if (((ch == curses.KEY_BACKSPACE) or (ch == curses.KEY_DC)) and
+          (len(command) > 0)):
+        command = command[0:-1]
+        y, x = self._screen.getyx()
+        self._screen.delch(y, x-1)
+        continue
+      if re.fullmatch('[a-zA-Z ]', chr(ch)):
+        char = str(chr(ch)).upper()
+        command = command + char
+        self._screen.echochar(char)
+        continue
+      curses.beep()
+
 def _curses_init(curses_screen, user_function):
   user_function(terminal(curses_screen))
 
@@ -50,12 +71,9 @@ def wrapper(function):
   curses.wrapper(_curses_init, function)
 
 def _test(term):
-  term.typeout('''
-This is some test text.
-Is this working well?
-''')
-  for i in range(50):
-    term.typeout('{}\n'.format(i))
+  command = term.get_command()
+  term.typeout('Entered command: ' + command)
+  time.sleep(10)
 
 if __name__ == '__main__':
   wrapper(_test)
