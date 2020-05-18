@@ -52,7 +52,7 @@ class terminal:
       if (chr(ch) == '\n') and (len(command) > 0):
         self._screen.echochar('\n')
         return command
-      if (((ch == curses.KEY_BACKSPACE) or (ch == curses.KEY_DC)) and
+      if ((ch in [ curses.KEY_BACKSPACE, curses.KEY_DC, ord('\b') ]) and
           (len(command) > 0)):
         command = command[0:-1]
         y, x = self._screen.getyx()
