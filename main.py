@@ -53,18 +53,18 @@ Suggested course of action:
     'nohalt': '''ERROR: MFG could not be halted. Override circuitry required.
 Reverse etching for override shut down circuitry:
 
-    +---------------------------+
+    /---------------------------\ 
     |                           |
-    |    O---+   O--------+     |
-    |        +-------O    |     |
-    |    O     O---+      |  O  |
-    |    |         +----O |  |  |
-    |    |   O------------+  |  |
+    |    O---\   O--------\     |
+    |        `-------O    |     |
+    |    O     O---\      |  O  |
+    |    |         `----O |  |  |
+    |    |   O------------'  |  |
     |    |                   |  |
-    |    +------------O      |  |
-    |       O----------------+  |
-    +-+              +-+      +-+
-      +--------------+ +------+'''
+    |    `------------O      |  |
+    |       O----------------'  |
+    `-\              /-\      /-'
+      `--------------' `------' '''
   },
   {
     'code': 'LGT',
@@ -137,7 +137,17 @@ def hlt(terminal, command):
     terminal.typeout('No such system ' + command[1] + '.\n')
     return
   if 'nohalt' in s:
-    terminal.typeout(s['nohalt'] + '\n')
+    terminal.typeout(
+      s['nohalt'] + '\n',
+      replace={
+        '-': curses.ACS_HLINE,
+        '|': curses.ACS_VLINE,
+        '/': curses.ACS_ULCORNER,
+        '\\': curses.ACS_URCORNER,
+        '`': curses.ACS_LLCORNER,
+        '\'': curses.ACS_LRCORNER,
+      },
+    )
   else:
     terminal.typeout(s['code'] + ' halted.\n')
     s['online'] = False
@@ -162,11 +172,9 @@ commands = {
 }
 
 def main_loop(terminal):
-  #terminal.typeout(logo)
-  terminal.curses_screen().addstr(logo)
+  terminal.typeout(logo, delay=0)
+  #terminal.curses_screen().addstr(logo)
   while True:
-    terminal.curses_screen().echochar(curses.ACS_BBSS)
-    terminal.curses_screen().echochar(ord('a'))
     terminal.typeout('\n')
     command = terminal.get_command().split()
     if command[0] in commands:

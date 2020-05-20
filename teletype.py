@@ -20,14 +20,24 @@ class terminal:
     self._screen.clear()
     self._screen.refresh()
 
-  def typeout(self, output):
+  def typeout(self, output, delay=0.025, replace={}):
+    '''Prints a string to the screen, imitating an old-style teletype.
+
+    The `output` string is printed out to the screen. The optional `delay`
+    parameter sets the delay between characters that are printed (to simulate
+    a slow baud rate). The optional `replace` parameter is a dictionary that
+    is used to replace characters with codes. This is handy to print out
+    `curses.ACS_*` codes while still dealing with simple ASCII strings.'''
     self._screen.refresh()
     sound = \
       simpleaudio.WaveObject.from_wave_file('audio/floppy-write.wav').play()
     for ch in output:
       #print(ch, end='', flush=True)
-      self._screen.echochar(ch)
-      time.sleep(0.025)
+      if ch in replace:
+        self._screen.echochar(replace[ch])
+      else:
+        self._screen.echochar(ch)
+      time.sleep(delay)
     sound.stop()
 
   def get_char(self, valid=r'.', prompt=None):
