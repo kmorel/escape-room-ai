@@ -130,7 +130,7 @@ def det(terminal, command):
 
 def hlt(terminal, command):
   if len(command) < 2:
-    terminal.typeout('Give a system with the DET command.\n')
+    terminal.typeout('Give a system with the HLT command.\n')
     return
   s = find_system(command[1])
   if not s:
@@ -154,7 +154,7 @@ def hlt(terminal, command):
 
 def cnt(terminal, command):
   if len(command) < 2:
-    terminal.typeout('Give a system with the DET command.\n')
+    terminal.typeout('Give a system with the CNT command.\n')
     return
   s = find_system(command[1])
   if not s:
@@ -163,12 +163,81 @@ def cnt(terminal, command):
   terminal.typeout(s['code'] + ' continued.\n')
   s['online'] = True
 
+entries = [
+  {
+    'code': 'EXT',
+    'open': 'Cannot open EXT. Lockdown in effect.',
+  },
+  {
+    'code': 'OFC',
+    'open': 'Cannot open OFC. Lockdown in effect.',
+  },
+  {
+    'code': 'CAF',
+  },
+  {
+    'code': 'MFG',
+    'open': '''ERROR. Access violation.''',
+  },
+  {
+    'code': 'CMP',
+    'open': '''ERROR. Access violation.''',
+  },
+  {
+    'code': 'VNT',
+    'open': '''Cannot remotely open VNT. Requires override circuit.
+    1. Insert override ciruit into slot to reveal access code.
+    2. Code read from top to bottom.
+    3. Code contains only odd digits.''',
+  },
+  {
+    'code': 'PLM',
+  },
+  {
+    'code': 'ROF',
+  },
+]
+
+def find_entry(code):
+  for e in entries:
+    if e['code'] == code:
+      return e
+  return None
+
+def opn(terminal, command):
+  if len(command) < 2:
+    terminal.typeout('Give an entry with the OPN command.\n')
+    return
+  e = find_entry(command[1])
+  if not e:
+    terminal.typeout('No such entry ' + command[1] + '.\n')
+    return
+  if 'open' in e:
+    terminal.typeout(e['open'] + '\n')
+  else:
+    terminal.typeout(e['code'] + ' opened\n')
+
+def cls(terminal, command):
+  if len(command) < 2:
+    terminal.typeout('Give an entry with the CLS command.\n')
+    return
+  e = find_entry(command[1])
+  if not e:
+    terminal.typeout('No such entry ' + command[1] + '.\n')
+    return
+  if 'close' in e:
+    terminal.typeout(e['close'] + '\n')
+  else:
+    terminal.typeout(e['code'] + ' closed\n')
+
 commands = {
   'LST': lst,
   'SYS': syst,
   'DET': det,
   'HLT': hlt,
   'CNT': cnt,
+  'OPN': opn,
+  'CLS': cls,
 }
 
 def main_loop(terminal):
