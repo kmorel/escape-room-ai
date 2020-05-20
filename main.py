@@ -230,6 +230,29 @@ def cls(terminal, command):
   else:
     terminal.typeout(e['code'] + ' closed\n')
 
+def pek(terminal, command):
+  if len(command) < 2:
+    terminal.typeout('Give a memory system with the PEK command.\n')
+    return
+  if command[1] != 'COR':
+    terminal.typeout('No such memory system ' + command[1] + '.\n')
+    return
+
+  terminal.typeout('Initiate core memory code reverse lookup.\n')
+  realcode = 4241
+  while True:
+    code = int(terminal.get_command(
+      valid=r'[0-9]',
+      prompt='Enter potential code (0000-9999): ')
+    )
+    if code < realcode:
+      terminal.typeout('Actual code greater than ' + str(code) + '\n')
+    elif code > realcode:
+      terminal.typeout('Actual code less than ' + str(code) + '\n')
+    else:
+      terminal.typeout('Correct code is ' + str(realcode) + '\n')
+      return
+
 commands = {
   'LST': lst,
   'SYS': syst,
@@ -238,6 +261,7 @@ commands = {
   'CNT': cnt,
   'OPN': opn,
   'CLS': cls,
+  'PEK': pek,
 }
 
 def main_loop(terminal):

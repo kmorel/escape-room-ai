@@ -53,7 +53,7 @@ class terminal:
         return ch
       simpleaudio.WaveObject.from_wave_file('audio/error.wav').play()
 
-  def get_command(self, prompt='COMMAND: '):
+  def get_command(self, prompt='COMMAND: ', valid=r'[a-zA-Z ]'):
     if prompt:
       self.typeout(prompt)
     command = ''
@@ -69,7 +69,7 @@ class terminal:
         self._screen.delch(y, x-1)
         simpleaudio.WaveObject.from_wave_file('audio/click.wav').play()
         continue
-      if re.fullmatch('[a-zA-Z ]', chr(ch)):
+      if re.fullmatch(valid, chr(ch)):
         char = str(chr(ch)).upper()
         command = command + char
         self._screen.echochar(char)
