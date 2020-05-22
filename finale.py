@@ -6,7 +6,8 @@ import time
 import teletype
 
 def confusion(terminal):
-  terminal.typeout('You win\n', delay=0.05)
+  time.sleep(2)
+  terminal.typeout('You win?\n', delay=0.05)
   time.sleep(1)
   terminal.typeout('I lose\n', delay=0.05)
   time.sleep(1)

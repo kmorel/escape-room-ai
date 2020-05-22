@@ -1,5 +1,8 @@
 import curses
+
+import finale
 import teletype
+import tictactoe
 
 logo = '''
                                       .*.
@@ -253,6 +256,19 @@ def pek(terminal, command):
       terminal.typeout('Correct code is ' + str(realcode) + '\n')
       return
 
+def ply(terminal, command):
+  if len(command) < 2:
+    terminal.typeout('Give a game type with the PLY command.\n')
+    return
+  if command[1] != 'TIC':
+    terminal.typeout('No such game ' + command[1] + '\n')
+    return
+  terminal.typeout('Playing tic-tac-toe\n\n')
+  game = tictactoe.Game(terminal)
+  status = game.play_game()
+  if status == tictactoe.GameStatus.x_win:
+    finale.death_throws(terminal)
+
 commands = {
   'LST': lst,
   'SYS': syst,
@@ -262,6 +278,7 @@ commands = {
   'OPN': opn,
   'CLS': cls,
   'PEK': pek,
+  'PLY': ply,
 }
 
 def main_loop(terminal):

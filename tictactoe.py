@@ -201,7 +201,7 @@ class Game:
     if status == GameStatus.cat:
       self._terminal.typeout('Cat game\n')
     elif status == GameStatus.x_win:
-      self._terminal.typeout('You won?!?!?!\n')
+      self._terminal.typeout('You win\n')
     elif status == GameStatus.o_win:
       self._terminal.typeout('I win\n')
     else:
