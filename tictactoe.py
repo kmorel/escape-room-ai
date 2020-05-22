@@ -62,6 +62,12 @@ class Game:
 
   def __init__(self, terminal):
     self._terminal = terminal
+    self.reset()
+
+  def reset(self):
+    self._x_squares = []
+    self._o_squares = []
+    self._empty_squares = [ 1, 2, 3, 4, 5, 6, 7, 8, 9 ]
 
   def _get_image(self, square):
     if square in self._x_squares:

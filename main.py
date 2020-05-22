@@ -265,6 +265,7 @@ def ply(terminal, command):
     return
   terminal.typeout('Playing tic-tac-toe\n\n')
   game = tictactoe.Game(terminal)
+  game.reset()
   status = game.play_game()
   if status == tictactoe.GameStatus.x_win:
     finale.death_throws(terminal)
