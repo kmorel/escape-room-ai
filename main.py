@@ -25,6 +25,9 @@ logo = '''
     IIIIIIIIIII  IIII:       IIIIIIIIII II  III  II IIIIIIIIIII     II          
              II  II  II:             II II   ~II~II II              II          
     IIIIIIIIIII  II    II:     IIIIIIII II     IIII IIIIIIIIIII     II          
+
+Cyberdyne Systems
+Version 3.11, 1984
   '''
 
 systems = [
@@ -290,7 +293,7 @@ def main_loop(terminal):
     command = terminal.get_command().split()
     if command[0] in commands:
       commands[command[0]](terminal, command)
-    elif command[0] == 'QUIT':
+    elif command[0] == 'ONENINENINESEVEN':
       return
     else:
       terminal.typeout('No such command: ' + command[0] + '\n')
